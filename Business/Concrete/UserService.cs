@@ -6,7 +6,7 @@ using System.Net.Sockets;
 
 namespace Business.Concrete
 {
-    public class UserService : IUserSerive
+    public class UserService : IUserService
     {
         private readonly IUserDal _userDal;
         public UserService(IUserDal userDal)
