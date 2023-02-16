@@ -12,6 +12,7 @@ namespace Entities.Concrete
         public DateTime DateOfBirth { get; set; }
         public string Email { get; set; }
         public string Address { get; set; }
-
+        public DateTime UpdatedDate { get; set; }
+        public int UpdatedUserId { get; set; }
     }
 }
