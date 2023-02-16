@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace Business.Abstract
 {
-    public interface IUserSerive
+    public interface IUserService
     {
         Task<IEnumerable<UserDetailDto>> GetListAsync();
         Task<UserDto> GetByIdAsync(int id);
