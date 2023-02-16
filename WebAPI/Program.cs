@@ -1,3 +1,5 @@
+using Business.Abstract;
+using Business.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.Contexts;
 using DataAccess.Concrete.EntityFramework;
@@ -21,7 +23,7 @@ opts.UseSqlServer("Data Source =.\\SQLEXPRESS;Initial Catalog = ECommerceProject
 builder.Services.AddTransient<IUserDal, EfUserDal>();
 
 builder.Services.AddTransient<IUserDal, EfUserDal>();
-//services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<IUserService, UserService>();
 
 var app = builder.Build();
 
