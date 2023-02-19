@@ -31,8 +31,8 @@ namespace DataAccess.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedUserId = table.Column<int>(type: "int", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2023, 2, 16, 2, 5, 2, 733, DateTimeKind.Local).AddTicks(7093)),
-                    IUpdatedUserId = table.Column<int>(type: "int", nullable: false),
-                    IUpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedUserId = table.Column<int>(type: "int", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DisplayOrder = table.Column<int>(type: "int", nullable: false),
                     IsDisplay = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -44,7 +44,7 @@ namespace DataAccess.Migrations
             migrationBuilder.InsertData(
                 schema: "dbo",
                 table: "Users",
-                columns: new[] { "Id", "Address", "CreatedDate", "CreatedUserId", "DateOfBirth", "DisplayOrder", "Email", "FirstName", "Gender", "IUpdatedDate", "IUpdatedUserId", "IsDisplay", "LastName", "Password", "UserName" },
+                columns: new[] { "Id", "Address", "CreatedDate", "CreatedUserId", "DateOfBirth", "DisplayOrder", "Email", "FirstName", "Gender", "UpdatedDate", "UpdatedUserId", "IsDisplay", "LastName", "Password", "UserName" },
                 values: new object[] { 1, "Lüleburgaz", new DateTime(2023, 2, 16, 2, 5, 2, 733, DateTimeKind.Local).AddTicks(7670), 1, new DateTime(2001, 6, 9, 0, 0, 0, 0, DateTimeKind.Unspecified), 0, "sevvalacet@gmail.com", "Şevval", true, null, 0, false, "Acet", "1234", "svvlacet" });
         }
 

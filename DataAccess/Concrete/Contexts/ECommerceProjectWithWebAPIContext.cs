@@ -1,12 +1,11 @@
 ﻿using DataAccess.Concrete.EntityFramework.Mapping;
 using Entities.Concrete;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Update;
 
 namespace DataAccess.Concrete.Contexts
 {
-   public class ECommerceProjectWithWebAPIContext :DbContext
-   {
+    public class ECommerceProjectWithWebAPIContext :DbContext
+    {
     public ECommerceProjectWithWebAPIContext(DbContextOptions<ECommerceProjectWithWebAPIContext> options) : base(options)
     {
 
@@ -16,15 +15,16 @@ namespace DataAccess.Concrete.Contexts
 
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            string connString = "Data Source =.\\SQLEXPRESS;Initial Catalog = ECommerceProjectWithWebAPIDb;Integrated Security=True";
-            optionsBuilder.UseSqlServer(connString);
-        }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.ApplyConfiguration(new UserMap());
-        }
+    {
+       base.OnConfiguring(optionsBuilder);
+       optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=ECommerceProjectWithWebAPIDb;Trusted_Connection=true");
+    }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new UserMap());
+    }
 
         public virtual DbSet<User> Users { get; set; }
     }
 }
+

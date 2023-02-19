@@ -2,7 +2,7 @@
 {
     public interface IUpdatedEntity
     {
-        int IUpdatedUserId { get; set; }
-        DateTime? IUpdatedDate { get; set; }
+        int? UpdatedUserId { get; set; }
+        DateTime? UpdatedDate { get; set; }
     }
 }

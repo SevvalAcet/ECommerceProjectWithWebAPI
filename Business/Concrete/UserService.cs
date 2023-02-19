@@ -23,12 +23,12 @@ namespace Business.Concrete
                    {
                     FirstName = item.FirstName,
                     LastName = item.LastName,
-                    Gender = item.Gender == true ? "Erkek" : "Kadın",
-                    DateOfBirth = item.DateOfBirth,
+                    Gender = item.Gender == true ? "Kadın" : "Erkek",
+                    DateOfBirth = (DateTime)item.DateOfBirth,
                     UserName = item.UserName,
                     Address = item.Address,
                     Email = item.Email,
-                    Id = item.Id
+                    Id = (int)item.Id
                    });
             }
             return userDetailDtos;
@@ -57,12 +57,12 @@ namespace Business.Concrete
             {
                 FirstName = userAdd.FirstName,
                 LastName = userAdd.LastName,
-                DateOfBirth = userAdd.DateOfBirth,
+                DateOfBirth = (DateTime)userAdd.DateOfBirth,
                 UserName = userAdd.UserName,
                 Address = userAdd.Address,
                 Email = userAdd.Email,
-                Gender = userAdd.Gender,
-                Id=userAdd.Id
+                Gender = (bool)userAdd.Gender,
+                Id= (int)userAdd.Id
             };
             return userDto;
         }
@@ -70,17 +70,21 @@ namespace Business.Concrete
         public async Task<UserDto> GetByIdAsync(int id)
         {
             var user =await _userDal.GetAsync(x =>x.Id == id);
-            UserDto userDto = new UserDto()
+            if(user != null)
             {
-                Address = user.Address,
-                DateOfBirth = user.DateOfBirth,
-                UserName = user.UserName,
-                Email = user.Email,
-                FirstName=user.FirstName,
-                Id = user.Id,
-                LastName = user.LastName
-            };
-            return userDto;
+                UserDto userDto = new UserDto()
+                {
+                    Address = user.Address,
+                    DateOfBirth = (DateTime)user.DateOfBirth,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    Id = (int)user.Id,
+                    LastName = user.LastName
+                };
+                return userDto;
+            }
+            return null;
         }
 
 
@@ -106,14 +110,14 @@ namespace Business.Concrete
             var userUpdate = await _userDal.UpdateAsync(user);
             UserUpdateDto newUserUpdateDto = new UserUpdateDto()
             {
-                Id = userUpdate.Id,
+                Id = (int)userUpdate.Id,
                 FirstName = userUpdate.FirstName,
                 LastName = userUpdate.LastName,
-                DateOfBirth = userUpdate.DateOfBirth,
+                DateOfBirth = (DateTime)userUpdate.DateOfBirth,
                 UserName = userUpdate.UserName,
                 Address = userUpdate.Address,
                 Email = userUpdate.Email,
-                Gender = userUpdate.Gender,
+                Gender = (bool)userUpdate.Gender,
                 Password = userUpdate.Password,
             };
             return newUserUpdateDto;
