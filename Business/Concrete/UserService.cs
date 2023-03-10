@@ -19,22 +19,22 @@ namespace Business.Concrete
             var response = await _userDal.GetListAsync();
             foreach (var item in response.ToList())
             {
-                userDetailDtos.Add(new UserDetailDto()
-                {
-                    Id = (int)item.Id,
+                   userDetailDtos.Add(new UserDetailDto()
+                   {
                     FirstName = item.FirstName,
                     LastName = item.LastName,
                     Gender = item.Gender == true ? "Kadın" : "Erkek",
                     DateOfBirth = (DateTime)item.DateOfBirth,
                     UserName = item.UserName,
                     Address = item.Address,
-                    Email = item.Email
-                });
+                    Email = item.Email,
+                    Id = (int)item.Id
+                   });
             }
             return userDetailDtos;
         }
-
-
+       
+    
         public async Task<UserDto> AddAsync(UserAddDto userAddDto)
         {
             User user = new User()
@@ -55,22 +55,22 @@ namespace Business.Concrete
 
             UserDto userDto = new UserDto()
             {
-                Id = (int)userAdd.Id,
                 FirstName = userAdd.FirstName,
                 LastName = userAdd.LastName,
                 DateOfBirth = (DateTime)userAdd.DateOfBirth,
                 UserName = userAdd.UserName,
                 Address = userAdd.Address,
                 Email = userAdd.Email,
-                Gender = (bool)userAdd.Gender
+                Gender = (bool)userAdd.Gender,
+                Id= (int)userAdd.Id
             };
             return userDto;
         }
 
         public async Task<UserDto> GetByIdAsync(int id)
         {
-            var user = await _userDal.GetAsync(x => x.Id == id);
-            if (user != null)
+            var user =await _userDal.GetAsync(x =>x.Id == id);
+            if(user != null)
             {
                 UserDto userDto = new UserDto()
                 {
@@ -90,10 +90,10 @@ namespace Business.Concrete
 
         public async Task<UserUpdateDto> UpdateAsync(UserUpdateDto userUpdateDto)
         {
-            var getUser = await _userDal.GetAsync(x => x.Id == userUpdateDto.Id);
+            var getUser=await _userDal.GetAsync(x=>x.Id==userUpdateDto.Id);
             User user = new User()
             {
-                Id = userUpdateDto.Id,
+                Id= userUpdateDto.Id,
                 FirstName = userUpdateDto.FirstName,
                 LastName = userUpdateDto.LastName,
                 DateOfBirth = userUpdateDto.DateOfBirth,
@@ -104,7 +104,7 @@ namespace Business.Concrete
                 CreatedUserId = getUser.CreatedUserId,
                 Gender = userUpdateDto.Gender,
                 Password = userUpdateDto.Password,
-                UpdatedDate = DateTime.Now,
+                UpdatedDate=DateTime.Now,
                 UpdatedUserId = 1
             };
             var userUpdate = await _userDal.UpdateAsync(user);
@@ -126,7 +126,7 @@ namespace Business.Concrete
         public async Task<bool> DeleteAsync(int id)
         {
             return await _userDal.DeleteAsync(id);
-
+            
         }
     }
 }
