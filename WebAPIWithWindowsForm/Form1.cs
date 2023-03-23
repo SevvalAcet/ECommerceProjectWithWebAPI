@@ -114,7 +114,7 @@ namespace WebAPIWithWindowsForm
             selectedID = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
             using (HttpClient httpClient = new HttpClient())
             {
-                var user = await httpClient.GetFromJsonAsync<UserDto>(url + "Users/GetById" + selectedID);
+                var user = await httpClient.GetFromJsonAsync<UserDto>(url + "Users/GetById/" + selectedID);
 
                 txtAddress.Text = user.Address;
                 txtGender.SelectedValue = user.Gender == true ? 1 : 2;
@@ -144,6 +144,7 @@ namespace WebAPIWithWindowsForm
             txtGender.DisplayMember = "GenderName";
             txtGender.ValueMember = "Id";
         }
+
         class Gender
         {
             public int Id { get; set; }
