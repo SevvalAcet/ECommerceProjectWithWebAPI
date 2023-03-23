@@ -80,7 +80,8 @@ namespace Business.Concrete
                     Email = user.Email,
                     FirstName = user.FirstName,
                     Id = (int)user.Id,
-                    LastName = user.LastName
+                    LastName = user.LastName,
+                    Password=user.Password
                 };
                 return userDto;
             }
