@@ -1,4 +1,4 @@
-﻿namespace Entities.Abstract
+﻿namespace Core.Entities.Abstract
 {
     //<summary>
     //Veritabanında karşılık gelen tablolarda olacak

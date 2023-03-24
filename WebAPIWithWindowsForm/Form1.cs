@@ -1,5 +1,4 @@
 using Entities.Dtos.UserDtos;
-using Entities.Enums;
 using System.Net.Http.Json;
 
 namespace WebAPIWithWindowsForm

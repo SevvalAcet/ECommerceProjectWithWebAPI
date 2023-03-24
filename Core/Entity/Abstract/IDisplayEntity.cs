@@ -1,4 +1,4 @@
-﻿namespace Entities.Abstract
+﻿namespace Core.Entity.Abstract
 {
     public interface IDisplayEntity
     {

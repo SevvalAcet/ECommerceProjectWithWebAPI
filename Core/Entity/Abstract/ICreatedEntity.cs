@@ -1,8 +1,8 @@
-﻿namespace Entities.Abstract
+﻿namespace Core.Entity.Abstract
 {
     public interface ICreatedEntity
     {
         int? CreatedUserId { get; set; }
-        DateTime? CreatedDate { get; set; }  
+        DateTime? CreatedDate { get; set; }
     }
 }

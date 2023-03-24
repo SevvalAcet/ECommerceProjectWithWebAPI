@@ -1,16 +1,16 @@
-﻿namespace Entities.Enums
+﻿namespace Entities.Abstract.Enums
 {
     public enum Genders
     {
         /// <summary>
         /// Kadın
         /// </summary>
-        Famale=0,
-        
+        Famale = 0,
+
         /// <summary>
         /// Erkek
         /// </summary>
-        Male=1
+        Male = 1
 
     }
 }

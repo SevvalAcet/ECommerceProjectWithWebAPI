@@ -1,4 +1,4 @@
-﻿using Entities.Abstract;
+﻿using Core.Entity.Abstract;
 using System.ComponentModel.DataAnnotations;
 
 namespace Entities.Dtos.UserDtos

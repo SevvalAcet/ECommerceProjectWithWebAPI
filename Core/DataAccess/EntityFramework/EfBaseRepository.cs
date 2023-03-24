@@ -1,8 +1,9 @@
-﻿using Entities.Abstract;
+﻿using Core.Entities.Abstract;
+using DataAccess;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace DataAccess.Concrete
+namespace Core.DataAccess.EntityFramework
 {
     public class EfBaseRepository<TEntity, TContext> : IBaseRepository<TEntity>
         where TEntity : class, IEntity, new()
@@ -21,7 +22,7 @@ namespace DataAccess.Concrete
 
         public async Task<TEntity> GetAsync(Expression<Func<TEntity, bool>> filter = null)
         {
-            using(TContext context = new TContext())
+            using (TContext context = new TContext())
             {
                 return await context.Set<TEntity>().SingleOrDefaultAsync(filter);
             }
@@ -50,10 +51,10 @@ namespace DataAccess.Concrete
         {
             using (TContext context = new TContext())
             {
-                var deleteEntity=await context.Set<TEntity>().FindAsync(id);
+                var deleteEntity = await context.Set<TEntity>().FindAsync(id);
                 context.Set<TEntity>().Remove(deleteEntity);
                 var data = await context.SaveChangesAsync();
-                if(data>0)
+                if (data > 0)
                     return true;
                 else
                     return false;
