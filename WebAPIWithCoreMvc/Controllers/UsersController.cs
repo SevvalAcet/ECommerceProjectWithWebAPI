@@ -1,5 +1,6 @@
 ﻿using Entities.Dtos.UserDtos;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 using WebAPIWithCoreMvc.ViewModels;
 
 namespace WebAPIWithCoreMvc.Controllers
@@ -90,7 +91,7 @@ namespace WebAPIWithCoreMvc.Controllers
                 Email = userUpdateViewModel.Email,
                 Password = userUpdateViewModel.Password,
                 UserName = userUpdateViewModel.UserName,
-                Id=id
+                Id = id
             };
             HttpResponseMessage httpResponseMessage = await _httpClient.PutAsJsonAsync(url + "Users/Update", userUpdateDto);
             if (httpResponseMessage.IsSuccessStatusCode)
@@ -100,6 +101,32 @@ namespace WebAPIWithCoreMvc.Controllers
             return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var user = await _httpClient.GetFromJsonAsync<UserDto>(url + "Users/GetById/" + id);
+            UserDeleteViewModel userDeleteViewModel = new UserDeleteViewModel()
+            {
+                FirstName = user.FirstName,
+                GenderName = user.Gender == true ? "Erkek" : "Kadın",
+                LastName = user.LastName,
+                Address = user.Address,
+                DateOfBirth = user.DateOfBirth,
+                Email = user.Email,
+                Password = user.Password,
+                UserName = user.UserName,
+            };
+            ViewBag.GenderList = GenderFill();
+            return View(userDeleteViewModel);
+        }
+
+        [HttpPost,ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await _httpClient.DeleteAsync(url + "Users/Delete/" + id);
+            return RedirectToAction("Index");
+        }
+         
         #endregion
 
         private List<Gender> GenderFill()
