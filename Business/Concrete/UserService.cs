@@ -1,17 +1,25 @@
 ﻿using Business.Abstract;
+using Core.Utilities.Security.Token;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.Dtos.UserDtos;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Sockets;
+using System.Security.Claims;
+using System.Text;
 
 namespace Business.Concrete
 {
     public class UserService : IUserService
     {
         private readonly IUserDal _userDal;
-        public UserService(IUserDal userDal)
+        private readonly AppSettings _appSettings;
+
+        public UserService(IUserDal userDal, AppSettings appSettings)
         {
             _userDal = userDal;
+            _appSettings = appSettings;
         }
         public async Task<IEnumerable<UserDetailDto>> GetListAsync()
         {
@@ -81,7 +89,7 @@ namespace Business.Concrete
                     FirstName = user.FirstName,
                     Id = (int)user.Id,
                     LastName = user.LastName,
-                    Password=user.Password
+                    Password = user.Password
                 };
                 return userDto;
             }
@@ -127,7 +135,33 @@ namespace Business.Concrete
         public async Task<bool> DeleteAsync(int id)
         {
             return await _userDal.DeleteAsync(id);
+        }
 
+        public async Task<AccessToken> Authenticate(UserForLoginDto userForLoginDto)
+        {
+            var user = await _userDal.GetAsync(x => x.UserName == userForLoginDto.UserName && x.Password == userForLoginDto.Password);
+            if (user == null)
+                return null;
+            var tokenhandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.SecurityKey);
+            var tokenDescription = new SecurityTokenDescriptor()
+            {
+                Subject = new System.Security.Claims.ClaimsIdentity(new[]
+                {
+                    new Claim(ClaimTypes.Name,user.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenhandler.CreateToken(tokenDescription);
+            AccessToken accessToken = new AccessToken()
+            {
+                Token = tokenhandler.WriteToken(token),
+                UserName = user.UserName,
+                Expression = (DateTime)tokenDescription.Expires,
+                UserID = (int)user.Id
+            };
+            return await Task.Run(() => accessToken);
         }
     }
 }

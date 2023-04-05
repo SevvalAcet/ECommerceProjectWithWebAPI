@@ -1,5 +1,5 @@
-﻿using Entities.Dtos.UserDtos;
-using System.Linq.Expressions;
+﻿using Core.Utilities.Security.Token;
+using Entities.Dtos.UserDtos;
 
 namespace Business.Abstract
 {
@@ -10,6 +10,7 @@ namespace Business.Abstract
         Task<UserDto> AddAsync(UserAddDto UserAddDto);
         Task<UserUpdateDto> UpdateAsync(UserUpdateDto userUpdateDto);
         Task<bool> DeleteAsync(int id);
+        Task<AccessToken> Authenticate(UserForLoginDto userForLoginDto);
     }
 }
 
