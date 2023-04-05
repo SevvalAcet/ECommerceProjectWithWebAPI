@@ -1,16 +1,17 @@
-﻿using Core.Utilities.Security.Token;
+﻿using Core.Utilities.Responses;
+using Core.Utilities.Security.Token;
 using Entities.Dtos.UserDtos;
 
 namespace Business.Abstract
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDetailDto>> GetListAsync();
-        Task<UserDto> GetByIdAsync(int id);
-        Task<UserDto> AddAsync(UserAddDto UserAddDto);
-        Task<UserUpdateDto> UpdateAsync(UserUpdateDto userUpdateDto);
-        Task<bool> DeleteAsync(int id);
-        Task<AccessToken> Authenticate(UserForLoginDto userForLoginDto);
+        Task<ApiDataResponse<IEnumerable<UserDetailDto>>> GetListAsync();
+        Task<ApiDataResponse<UserDto>> GetByIdAsync(int id);
+        Task<ApiDataResponse<UserDto>> AddAsync(UserAddDto UserAddDto);
+        Task<ApiDataResponse<UserUpdateDto>> UpdateAsync(UserUpdateDto userUpdateDto);
+        Task<ApiDataResponse<bool>> DeleteAsync(int id);
+        //Task<ApiDataResponse<AccessToken>> Authenticate(UserForLoginDto userForLoginDto);
     }
 }
 

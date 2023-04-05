@@ -67,16 +67,16 @@ namespace WebAPI.Controllers
             return BadRequest(false);
         }
 
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("[action]")]
-        public async Task<IActionResult> Authenticate([FromBody] UserForLoginDto userForLoginDto)
-        {
-            var result = await _userService.Authenticate(userForLoginDto);
-            if (result != null)
-                return Ok(result);
-            return BadRequest();
-        }
+        //[AllowAnonymous]
+        //[HttpPost]
+        //[Route("[action]")]
+        //public async Task<IActionResult> Authenticate([FromBody] UserForLoginDto userForLoginDto)
+        //{
+        //    var result = await _userService.Authenticate(userForLoginDto);
+        //    if (result != null)
+        //        return Ok(result);
+        //    return BadRequest();
+        //}
     }
 }
 
