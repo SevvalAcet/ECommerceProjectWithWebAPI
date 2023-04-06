@@ -1,5 +1,7 @@
+using AutoMapper;
 using Business.Abstract;
 using Business.Concrete;
+using Business.Mappings;
 using Core.Utilities.Security.Token;
 using Core.Utilities.Security.Token.Jwt;
 using DataAccess.Abstract;
@@ -80,6 +82,15 @@ builder.Services.AddAuthentication(x=>
            ValidateAudience = false
        };
    });
+#endregion
+
+#region AutoMapper
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+var mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 #endregion
 
 #region DI
