@@ -1,5 +1,5 @@
 ﻿using Business.Abstract;
-using Entities.Dtos.UserDtos;
+using Entities.Dtos.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

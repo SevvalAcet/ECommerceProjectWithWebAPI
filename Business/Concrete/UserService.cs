@@ -5,7 +5,7 @@ using Core.Utilities.Responses;
 using Core.Utilities.Security.Token;
 using DataAccess.Abstract;
 using Entities.Concrete;
-using Entities.Dtos.UserDtos;
+using Entities.Dtos.User;
 using System.Linq.Expressions;
 
 namespace Business.Concrete

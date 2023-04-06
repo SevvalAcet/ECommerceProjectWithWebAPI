@@ -1,7 +1,7 @@
 ﻿using Core.Entity.Abstract;
 using Entities.Abstract;
 
-namespace Entities.Dtos.UserDtos
+namespace Entities.Dtos.User
 {
     public class UserAddDto:IDto
     {

@@ -1,6 +1,6 @@
 ﻿using Core.Utilities.Responses;
 using Entities.Concrete;
-using Entities.Dtos.UserDtos;
+using Entities.Dtos.User;
 using System.Linq.Expressions;
 
 namespace Business.Abstract

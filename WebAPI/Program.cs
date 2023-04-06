@@ -7,6 +7,7 @@ using Core.Utilities.Security.Token.Jwt;
 using DataAccess.Abstract;
 using DataAccess.Concrete.Contexts;
 using DataAccess.Concrete.EntityFramework;
+using FluentAssertions.Common;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -18,39 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
-    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Name = "Authorization",
-        Description = "JWT Authorization header using the Bearer scheme.",
-        Type = SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-    });
-    c.AddSecurityRequirement(new OpenApiSecurityRequirement
-{
-    {
-        new OpenApiSecurityScheme
-        {
-            Reference = new OpenApiReference
-            {
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
-            }
-        },
-        new string[] {}
-    }
-});
-});
-
-
-builder.Services.AddDbContext<ECommerceProjectWithWebAPIContext>(opts =>
-opts.UseSqlServer("Data Source =.\\SQLEXPRESS;Initial Catalog = ECommerceProjectWithWebAPIDb;Integrated " +
-"Security=True", options => options.MigrationsAssembly("DataAccess").MigrationsHistoryTable
-(HistoryRepository.DefaultTableName, "dbo")));
+builder.Services.AddEndpointsApiExplorer();
 #region JWT
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
@@ -89,20 +58,21 @@ builder.Services.AddTransient<IUserDal, EfUserDal>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ITokenService, JwtTokenService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
+
 #endregion
 
+builder.Services.AddDbContext<ECommerceProjectWithWebAPIContext>(opts =>
+opts.UseSqlServer("Data Source =.\\SQLEXPRESS;Initial Catalog = ECommerceProjectWithWebAPIDb;Integrated " +
+"Security=True", options => options.MigrationsAssembly("DataAccess").MigrationsHistoryTable
+(HistoryRepository.DefaultTableName, "dbo")));
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+   
 }
-
-
-
 
 using (var scope = app.Services.CreateScope())
 {
