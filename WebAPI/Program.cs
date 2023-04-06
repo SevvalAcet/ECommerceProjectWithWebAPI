@@ -51,37 +51,28 @@ builder.Services.AddDbContext<ECommerceProjectWithWebAPIContext>(opts =>
 opts.UseSqlServer("Data Source =.\\SQLEXPRESS;Initial Catalog = ECommerceProjectWithWebAPIDb;Integrated " +
 "Security=True", options => options.MigrationsAssembly("DataAccess").MigrationsHistoryTable
 (HistoryRepository.DefaultTableName, "dbo")));
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 #region JWT
 var appSettingsSection = builder.Configuration.GetSection("AppSettings");
 builder.Services.Configure<AppSettings>(appSettingsSection);
 
 var appSettings = appSettingsSection.Get<AppSettings>();
 var key = Encoding.ASCII.GetBytes(appSettings.SecurityKey);
-builder.Services.AddAuthentication(x=>
+builder.Services.AddAuthentication(x =>
 {
     x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}) .AddJwtBearer(x =>
-   {
-       x.RequireHttpsMetadata = false;
-       x.SaveToken = true;
-       x.TokenValidationParameters = new TokenValidationParameters
-       {
-           ValidateIssuerSigningKey = true,
-           IssuerSigningKey = new SymmetricSecurityKey(key),
-           ValidateIssuer = false,
-           ValidateAudience = false
-       };
-   });
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 #endregion
 
 #region AutoMapper
@@ -97,7 +88,20 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddTransient<IUserDal, EfUserDal>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ITokenService, JwtTokenService>();
+builder.Services.AddTransient<IAuthService, AuthService>();
 #endregion
+
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+
 
 
 using (var scope = app.Services.CreateScope())

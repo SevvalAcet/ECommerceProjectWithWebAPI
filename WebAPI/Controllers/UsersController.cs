@@ -62,7 +62,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _userService.DeleteAsync(id);
-            if (result )
+            if (result.Data )
                 return Ok(true);
             return BadRequest(false);
         }
