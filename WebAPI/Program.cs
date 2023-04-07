@@ -1,5 +1,10 @@
+using AutoMapper;
 using Business.Abstract;
 using Business.Concrete;
+using Business.Mappings;
+using Core.Extensions;
+using Core.Utilities.Security.Token;
+using Core.Utilities.Security.Token.Jwt;
 using DataAccess.Abstract;
 using DataAccess.Concrete.Contexts;
 using DataAccess.Concrete.EntityFramework;
@@ -8,30 +13,39 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddCustomSwagger();
+builder.Services.AddCustomJwtToken(Configuration);
 
-builder.Services.AddDbContext<ECommerceProjectWithWebAPIContext>(opts => 
-opts.UseSqlServer("Data Source =.\\SQLEXPRESS;Initial Catalog = ECommerceProjectWithWebAPIDb;Integrated " +
-"Security=True", options=>options.MigrationsAssembly("DataAccess").MigrationsHistoryTable
-(HistoryRepository.DefaultTableName,"dbo")));
+#region AutoMapper
+var mapperConfig = new MapperConfiguration(mc =>
+{
+    mc.AddProfile(new MappingProfile());
+});
+var mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
+#endregion
 
-builder.Services.AddTransient<IUserDal, EfUserDal>();
-
+#region DI
 builder.Services.AddTransient<IUserDal, EfUserDal>();
 builder.Services.AddTransient<IUserService, UserService>();
+builder.Services.AddTransient<ITokenService, JwtTokenService>();
+builder.Services.AddTransient<IAuthService, AuthService>();
+
+#endregion
+
+builder.Services.AddDbContext<ECommerceProjectWithWebAPIContext>(opts =>
+opts.UseSqlServer("Data Source =.\\SQLEXPRESS;Initial Catalog = ECommerceProjectWithWebAPIDb;Integrated " +
+"Security=True", options => options.MigrationsAssembly("DataAccess").MigrationsHistoryTable
+(HistoryRepository.DefaultTableName, "dbo")));
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+   
 }
 
 using (var scope = app.Services.CreateScope())
@@ -42,9 +56,14 @@ using (var scope = app.Services.CreateScope())
     context.Database.Migrate();
 }
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
+
+
+
 

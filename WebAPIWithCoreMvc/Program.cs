@@ -2,6 +2,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -14,10 +17,23 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
+
 app.UseAuthorization();
 
+app.UseEndpoints(endpoints =>
+{
+    //Admin/Home/Index
+    endpoints.MapAreaControllerRoute(
+    areaName: "Admin",
+    name: "Admin",
+    pattern: "Admin/{controller=Home}/{action=Index}/{id?}"
+    );
+});
+
+// Home / Index
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Users}/{action=Index}/{id?}");
 
 app.Run();

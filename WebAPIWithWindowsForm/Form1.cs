@@ -1,153 +1,179 @@
-using Entities.Dtos.UserDtos;
+using Entities.Dtos.User;
 using System.Net.Http.Json;
 
 namespace WebAPIWithWindowsForm
 {
     public partial class Form1 : Form
     {
-        private string url = "http://localhost:37453/api/Users/GetList";
+
+        #region Defines 
+        string url = "http://localhost:37453/api/";
+        private int selectedID = 0;
+        #endregion Defines
+
+        #region Form1
         public Form1()
         {
             InitializeComponent();
         }
+        #endregion Form1
 
         private async void Form1_Load(object sender, EventArgs e)
         {
+            btnAdd.Enabled = true;
+            btnUpdate.Enabled = false;
+            btnDelete.Enabled = false;
+            await DataGridViewFill();
+            CmbGenderFill();
+        }
+
+        #region Crud
+        private async void btnAdd_Click(object sender, EventArgs e)
+        {
             using (HttpClient httpClient = new HttpClient())
             {
-                var users = await httpClient.GetFromJsonAsync<List<UserDetailDto>>(new Uri(url));
-                dataGridView.DataSource=users;
+                UserAddDto userAddDto = new UserAddDto()
+                {
+                    FirstName = txtFirstName.Text,
+                    Address = txtAddress.Text,
+                    DateOfBirth = Convert.ToDateTime(dtpDateOfBirth.Text),
+                    Email = txtEmail.Text,
+                    Gender = txtGender.Text == "Erkek" ? true : false,
+                    LastName = txtLastName.Text,
+                    Password = txtPassword.Text,
+                    UserName = txtUserName.Text
+                };
+
+                HttpResponseMessage response = await httpClient.PostAsJsonAsync(url + "Users/Add", userAddDto);
+                if (response.IsSuccessStatusCode)
+                {
+                    await DataGridViewFill();
+                    MessageBox.Show("Ekleme iþlemi baþarýlý!");
+                    ClearForm();
+                }
+                else
+                {
+                    MessageBox.Show("Ekleme iþlemi baþarýsýz!");
+                }
             }
         }
-        
-        private void textBox9_TextChanged(object sender, EventArgs e)
+
+        private async void btnUpdate_Click(object sender, EventArgs e)
         {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                UserUpdateDto userUpdateDto = new UserUpdateDto()
+                {
+                    Id = selectedID,
+                    FirstName = txtFirstName.Text,
+                    Address = txtAddress.Text,
+                    DateOfBirth = Convert.ToDateTime(dtpDateOfBirth.Text),
+                    Email = txtEmail.Text,
+                    Gender = txtGender.Text == "Erkek" ? true : false,
+                    LastName = txtLastName.Text,
+                    Password = txtPassword.Text,
+                    UserName = txtUserName.Text
+                };
+
+                HttpResponseMessage response = await httpClient.PutAsJsonAsync(url + "Users/Update", userUpdateDto);
+                if (response.IsSuccessStatusCode)
+                {
+                    await DataGridViewFill();
+                    MessageBox.Show("Düzenleme iþlemi baþarýlý!");
+                    ClearForm();
+                }
+                else
+                {
+                    MessageBox.Show("Düzenleme iþlemi baþarýsýz!");
+                }
+            }
+        }
+
+        private async void btnDelete_Click(object sender, EventArgs e)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+
+                HttpResponseMessage response = await httpClient.DeleteAsync(url + "Users/Delete" + selectedID);
+                if (response.IsSuccessStatusCode)
+                {
+                    MessageBox.Show("Silme iþlemi baþarýlý!");
+                    await DataGridViewFill();
+                    ClearForm();
+                }
+                else
+                {
+                    MessageBox.Show("Silme iþlemi baþarýsýz!");
+                }
+            }
+        }
+
+        private async void dataGridView1_DoubleClick(object sender, EventArgs e)
+        {
+            selectedID = Convert.ToInt32(dataGridView1.CurrentRow.Cells[0].Value.ToString());
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var user = await httpClient.GetFromJsonAsync<UserDto>(url + "Users/GetById/" + selectedID);
+
+                txtAddress.Text = user.Address;
+                txtGender.SelectedValue = user.Gender == true ? 1 : 2;
+                txtUserName.Text = user.UserName;
+                txtLastName.Text = user.LastName;
+                txtFirstName.Text = user.FirstName;
+                txtEmail.Text = user.Email;
+                txtPassword.Text = String.Empty;
+                dtpDateOfBirth.Value = user.DateOfBirth;
+            }
+            btnAdd.Enabled = false;
+            btnUpdate.Enabled = true;
+            btnDelete.Enabled = true;
 
         }
 
-        private void textBox4_TextChanged(object sender, EventArgs e)
-        {
+        #endregion
 
+        #region Methods
+
+        private void CmbGenderFill()
+        {
+            List<Gender> genders = new List<Gender>();
+            genders.Add(new Gender() { Id = 1, GenderName = "Erkek" });
+            genders.Add(new Gender() { Id = 2, GenderName = "Kadýn" });
+            txtGender.DataSource = genders;
+            txtGender.DisplayMember = "GenderName";
+            txtGender.ValueMember = "Id";
         }
 
-        private void label8_Click(object sender, EventArgs e)
+        class Gender
         {
-
+            public int Id { get; set; }
+            public string GenderName { get; set; }
         }
 
-        private void textBox8_TextChanged(object sender, EventArgs e)
+        private async Task DataGridViewFill()
         {
-
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var users = await httpClient.GetFromJsonAsync<List<UserDetailDto>>(url + "Users/GetList");
+                dataGridView1.DataSource = users;
+            }
+        }
+        void ClearForm()
+        {
+            txtAddress.Text = String.Empty;
+            txtGender.SelectedValue = 0;
+            txtPassword.Text = String.Empty;
+            txtUserName.Text = String.Empty;
+            txtLastName.Text = String.Empty;
+            txtFirstName.Text = String.Empty;
+            txtEmail.Text = String.Empty;
+            dtpDateOfBirth.Value = DateTime.Now;
+            btnAdd.Enabled = true;
+            btnUpdate.Enabled = false;
+            btnDelete.Enabled = false;
         }
 
-        private void label7_Click(object sender, EventArgs e)
-        {
+        #endregion Methods
 
-        }
-
-        private void textBox7_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label6_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox6_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label5_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox5_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label9_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click_2(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox2_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Load_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void Form1_Load_2(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox12_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void textBox7_TextChanged_1(object sender, EventArgs e)
-        {
-
-        }
     }
 }
