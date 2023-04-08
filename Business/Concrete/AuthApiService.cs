@@ -9,13 +9,13 @@ using Entities.Dtos.User;
 
 namespace Business.Concrete
 {
-    public class AuthService : IAuthService
+    public class AuthApiService : IAuthApiService
     {
         #region DI
         private readonly IUserService _userService;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
-        public AuthService(IUserService userService, ITokenService tokenService, IMapper mapper)
+        public AuthApiService(IUserService userService, ITokenService tokenService, IMapper mapper)
         {
             _userService = userService;
             _tokenService = tokenService;

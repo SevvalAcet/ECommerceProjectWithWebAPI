@@ -31,7 +31,7 @@ builder.Services.AddSingleton(mapper);
 builder.Services.AddTransient<IUserDal, EfUserDal>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<ITokenService, JwtTokenService>();
-builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IAuthApiService, AuthApiService>();
 
 #endregion
 
