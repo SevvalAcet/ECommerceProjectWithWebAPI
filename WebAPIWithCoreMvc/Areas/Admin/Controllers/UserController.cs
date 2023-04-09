@@ -9,18 +9,16 @@ namespace WebAPIWithCoreMvc.Areas.Admin.Controllers
     public class UserController : Controller
     {
         private IUserApiService _userApiService;
-        private IHttpContextAccessor _httpContextAccessor;
 
-        public UserController(IUserApiService userApiService, IHttpContextAccessor httpContextAccessor)
+        public UserController(IUserApiService userApiService)
         {
             _userApiService = userApiService;
-            _httpContextAccessor = httpContextAccessor;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            return View(await  _userApiService.GetListAsync());
+            return View(await _userApiService.GetListAsync());
         }
     }
 }
