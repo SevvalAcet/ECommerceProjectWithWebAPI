@@ -18,6 +18,11 @@ namespace WebAPIWithCoreMvc.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
+            var result = await _userApiService.GetListAsync();
+            if (result != null)
+            {
+                throw new Exception("Hata oluştu");
+            }
             return View(await _userApiService.GetListAsync());
         }
     }
