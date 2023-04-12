@@ -1,4 +1,7 @@
-﻿namespace WebAPIWithCoreMvc.Handler
+﻿using System.Net;
+using WebAPIWithCoreMvc.Exceptions;
+
+namespace WebAPIWithCoreMvc.Handler
 {
     public class AuthTokenHandler : DelegatingHandler
     {
@@ -7,7 +10,7 @@
 
         }
         private IHttpContextAccessor _httpContextAccessor;
-        public AuthTokenHandler(IHttpContextAccessor _httpContextAccessor)
+        public AuthTokenHandler(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

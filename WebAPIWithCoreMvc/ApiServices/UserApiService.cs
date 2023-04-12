@@ -22,9 +22,15 @@ namespace WebAPIWithCoreMvc.ApiServices
             throw new NotImplementedException();
         }
 
-        public Task<ApiDataResponse<List<UserDto>>> GetListAsync()
+        public async Task<List<UserDetailDto>> GetListAsync()
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.GetAsync("Users/GetList");
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+            var responseSuccess = await response.Content.ReadFromJsonAsync<ApiDataResponse<IEnumerable<UserDetailDto>>>();
+            return responseSuccess.Data.ToList();
         }
 
         public Task<ApiDataResponse<List<UserDto>>> GetListDetailAsync()
@@ -33,6 +39,11 @@ namespace WebAPIWithCoreMvc.ApiServices
         }
 
         public Task<ApiDataResponse<UserUpdateDto>> UpdateAsync(UserUpdateDto appUserUpdateDto)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<ApiDataResponse<List<UserDto>>> IUserApiService.GetListAsync()
         {
             throw new NotImplementedException();
         }
