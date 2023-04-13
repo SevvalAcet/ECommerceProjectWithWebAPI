@@ -22,6 +22,9 @@ namespace Business.Concrete
             _mapper = mapper;
         }
         #endregion
+
+       // [ValidationAspect(typeof(LoginDtoValidator))]
+
         public async Task<ApiDataResponse<UserDto>> LoginAsync(LoginDto loginDto)
         {
             var user = await _userService.GetAsync(x => x.UserName == loginDto.UserName);
